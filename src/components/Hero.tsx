@@ -4,31 +4,11 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Truck, ShieldCheck, Award } from 'lucide-react';
-
-const slides = [
-  {
-    image: 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    subtitle: 'EDICIÓN DEPORTIVA',
-    title: 'NUEVOS INGRESOS',
-    main: 'LLANTAS DEPORTIVAS',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1617083959539-21781ae769dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    subtitle: 'MEJORA DE RENDIMIENTO',
-    title: 'ÚLTIMOS ESCAPES',
-    main: 'SIENTE EL PODER',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    subtitle: 'SERIE CLÁSICA',
-    title: 'RINES VINTAGE',
-    main: 'DISEÑO ATEMPORAL',
-  },
-];
+import slides from '../utils/slides.json'
 
 const Hero = () => {
   return (
-    <div className="relative h-[calc(100vh-120px)]">
+    <div className="relative h-[calc(100vh-280px)] bg-amber-300">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -57,14 +37,16 @@ const Hero = () => {
             </div>
           </SwiperSlide>
         ))}
+
+        <h1>swiper</h1>
       </Swiper>
 
-      <div className="absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm z-20">
+      <div className="bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm z-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-gray-800 py-4 md:py-8">
             <div className="flex items-center space-x-4">
-              <div className="bg-red-500 p-3 md:p-4 rounded-full">
-                <Truck size={24} md:size={32} />
+              <div className="bg-red-500 p-3 md:p-4 rounded-full text-amber-50">
+                <Truck size={24} />
               </div>
               <div>
                 <h3 className="font-bold text-red-500 text-sm md:text-base">ENVÍO GRATIS</h3>
@@ -72,8 +54,8 @@ const Hero = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="bg-red-500 p-3 md:p-4 rounded-full">
-                <ShieldCheck size={24} md:size={32} />
+              <div className="bg-red-500 p-3 md:p-4 rounded-full text-amber-50">
+                <ShieldCheck size={24} />
               </div>
               <div>
                 <h3 className="font-bold text-red-500 text-sm md:text-base">PAGO SEGURO</h3>
@@ -81,8 +63,8 @@ const Hero = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="bg-red-500 p-3 md:p-4 rounded-full">
-                <Award size={24} md:size={32} />
+              <div className="bg-red-500 p-3 md:p-4 rounded-full text-amber-50">
+                <Award size={24} />
               </div>
               <div>
                 <h3 className="font-bold text-red-500 text-sm md:text-base">1 AÑO DE GARANTÍA</h3>
