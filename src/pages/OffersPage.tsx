@@ -1,0 +1,156 @@
+import { useState, useMemo } from 'react';
+import { List, Grid2X2, Grid3X3, Tag } from 'lucide-react';
+import { products } from '../data/products';
+import ProductCard from '../components/ProductCard';
+import Header from '../components/Header';
+import CartModal from '../components/CartModal';
+import Footer from '../components/Footer';
+
+// Simulated offers data - in a real app this would come from an API
+const offersData = products.slice(0, 8).map(product => ({
+  ...product,
+  originalPrice: product.price,
+  discountPercentage: Math.floor(Math.random() * 30) + 10, // 10-40% discount
+  price: Math.round(product.price * (1 - (Math.floor(Math.random() * 30) + 10) / 100) * 100) / 100
+}));
+
+const OffersPage = () => {
+  const [sortBy, setSortBy] = useState<'popular' | 'price-low' | 'price-high' | 'discount'>('discount');
+  const [gridLayout, setGridLayout] = useState<'1' | '3' | '4'>('4');
+
+  const filteredProducts = useMemo(() => {
+    let filtered = [...offersData];
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'popular':
+        filtered = [...filtered].sort((a, b) => b.rating - a.rating);
+        break;
+      case 'price-low':
+        filtered = [...filtered].sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered = [...filtered].sort((a, b) => b.price - a.price);
+        break;
+      case 'discount':
+        filtered = [...filtered].sort((a, b) => (b.discountPercentage || 0) - (a.discountPercentage || 0));
+        break;
+    }
+
+    return filtered;
+  }, [sortBy]);
+
+  const getGridClasses = () => {
+    switch (gridLayout) {
+      case '1':
+        return 'grid-cols-1';
+      case '3':
+        return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+      case '4':
+        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+      default:
+        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+    }
+  };
+
+  return (
+    <>
+      <Header />
+      <CartModal />
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header with offer banner */}
+          <div className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg p-6 mb-8 text-center">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <Tag size={32} />
+              <h1 className="text-4xl font-bold">¡OFERTAS ESPECIALES!</h1>
+              <Tag size={32} />
+            </div>
+            <p className="text-lg opacity-90">Descuentos exclusivos en productos seleccionados</p>
+          </div>
+
+          {/* Sorting and Grid Controls */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-700">Ordenar por:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'popular' | 'price-low' | 'price-high' | 'discount')}
+                className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <option value="discount">Mayor descuento</option>
+                <option value="popular">Más popular</option>
+                <option value="price-low">Precio menor</option>
+                <option value="price-high">Precio mayor</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-700">Vista:</span>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setGridLayout('1')}
+                  className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                    gridLayout === '1'
+                      ? 'bg-red-500 text-white border-red-500'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <List size={16} />
+                </button>
+                <button
+                  onClick={() => setGridLayout('3')}
+                  className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                    gridLayout === '3'
+                      ? 'bg-red-500 text-white border-red-500'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <Grid2X2 size={16} />
+                </button>
+                <button
+                  onClick={() => setGridLayout('4')}
+                  className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                    gridLayout === '4'
+                      ? 'bg-red-500 text-white border-red-500'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <Grid3X3 size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className={`grid ${getGridClasses()} gap-8`}>
+            {filteredProducts.map(product => (
+              <div key={product.id} className="relative">
+                {/* Discount badge */}
+                {product.discountPercentage && (
+                  <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold z-10">
+                    -{product.discountPercentage}%
+                  </div>
+                )}
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+
+          {/* Call to action */}
+          <div className="mt-12 text-center">
+            <div className="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">¿No encuentras lo que buscas?</h3>
+              <p className="text-gray-600 mb-4">Contáctanos para ofertas personalizadas</p>
+              <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors">
+                Contactar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+export default OffersPage;
