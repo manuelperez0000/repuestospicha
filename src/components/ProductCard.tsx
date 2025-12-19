@@ -15,7 +15,7 @@ interface ProductCardProps {
   onImageClick?: (imageSrc: string) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onImageClick }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
   const { addToCart, cart } = useStore();
 
@@ -40,9 +40,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onImageClick }) => {
           src={product.image}
           alt={product.name}
           className="w-full h-56 object-cover cursor-pointer"
-          onClick={handleImageClick}
         />
-        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
+        <div onClick={handleImageClick} className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
       </div>
       <div className="p-4">
         <p className="text-gray-500 text-sm">{product.category}</p>

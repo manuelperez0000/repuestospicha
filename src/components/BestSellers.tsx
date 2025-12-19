@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, Grid2X2, Grid3X3, Star } from 'lucide-react';
@@ -56,18 +57,17 @@ const BestSellers = () => {
 
   const renderListItem = (product: any) => (
     <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-md flex">
-      <div className="relative w-48 h-48 flex-shrink-0">
+      <div className="relative cursor-pointer w-48 h-48" onClick={() => navigate(`/producto/${product.id}`)}>
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover cursor-pointer"
-          onClick={() => navigate(`/producto/${product.id}`)}
+          className="w-full  h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
       </div>
       <div className="flex-1 p-6 relative">
         <p className="text-gray-500 text-sm mb-1">{product.category}</p>
-        <h3 className="font-semibold text-lg mb-2 text-gray-800">{product.name}</h3>
+        <h3 onClick={() => alert()} className="hover:underline cursor-pointer font-semibold text-lg mb-2 text-gray-800">{product.name}</h3>
         <div className="flex items-center mb-3">
           <div className="flex text-yellow-400 mr-2">
             {[...Array(5)].map((_, i) => (
@@ -84,11 +84,10 @@ const BestSellers = () => {
         <button
           onClick={() => handleAddToCart(product)}
           disabled={isInCart(product.id)}
-          className={`absolute bottom-6 right-6 px-4 py-2 rounded transition-colors ${
-            isInCart(product.id)
+          className={`absolute bottom-6 right-6 px-4 py-2 rounded transition-colors ${isInCart(product.id)
               ? 'bg-red-700 cursor-not-allowed opacity-75 text-white'
               : 'bg-red-600 hover:bg-red-700 cursor-pointer text-white'
-          }`}
+            }`}
         >
           {isInCart(product.id) ? 'Agregado' : 'Agregar al carrito'}
         </button>
@@ -121,31 +120,28 @@ const BestSellers = () => {
             <div className="flex gap-1">
               <button
                 onClick={() => setGridLayout('1')}
-                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  gridLayout === '1'
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${gridLayout === '1'
                     ? 'bg-red-500 text-white border-red-500'
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <List size={16} />
               </button>
               <button
                 onClick={() => setGridLayout('3')}
-                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  gridLayout === '3'
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${gridLayout === '3'
                     ? 'bg-red-500 text-white border-red-500'
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <Grid2X2 size={16} />
               </button>
               <button
                 onClick={() => setGridLayout('4')}
-                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  gridLayout === '4'
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${gridLayout === '4'
                     ? 'bg-red-500 text-white border-red-500'
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <Grid3X3 size={16} />
               </button>
