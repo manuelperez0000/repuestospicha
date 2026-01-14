@@ -1,4 +1,5 @@
 import { Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import useStore from '../states/global';
 
 interface ProductCardProps {
@@ -14,7 +15,8 @@ interface ProductCardProps {
   onImageClick?: (imageSrc: string) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onImageClick }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const navigate = useNavigate();
   const { addToCart, cart } = useStore();
 
   const isInCart = cart.some(item => item.id === product.id);
@@ -26,9 +28,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onImageClick }) => {
   };
 
   const handleImageClick = () => {
-    if (onImageClick) {
-      onImageClick(product.image);
-    }
+  
+      navigate(`/producto/${product.id}`);
+    
   };
 
   return (
@@ -38,13 +40,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onImageClick }) => {
           src={product.image}
           alt={product.name}
           className="w-full h-56 object-cover cursor-pointer"
-          onClick={handleImageClick}
         />
-        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
+        <div onClick={handleImageClick} className="cursor-pointer absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
       </div>
       <div className="p-4">
         <p className="text-gray-500 text-sm">{product.category}</p>
-        <h3 className="font-semibold mt-1 truncate text-gray-800">{product.name}</h3>
+        <h3 onClick={handleImageClick} className="hover:underline cursor-pointer font-semibold mt-1 truncate text-gray-800">{product.name}</h3>
         <div className="flex items-center mt-2">
           <div className="flex text-yellow-400">
             {[...Array(5)].map((_, i) => (
