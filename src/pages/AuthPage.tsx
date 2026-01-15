@@ -54,58 +54,62 @@ const AuthPage = () => {
   };
 
   const handleGoogleAuth = async () => {
-    setLoading(true);
-    setError('');
+  setLoading(true);
+  setError('');
 
-    try {
-      if (!window.google) {
-        setLoading(false);
-        setError('Google Sign-In not loaded');
-        return;
-      }
+  try {
+    if (!window.google) {
+      setLoading(false);
+      setError('Google Sign-In not loaded');
+      return;
+    }
 
-      window.google.accounts.id.initialize({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        use_fedcm_for_prompt: true,
-        callback: async (response) => {
-          try {
-            if (response.error) throw new Error('Google authentication failed');
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      // 1. Confirmamos el uso de FedCM explícitamente
+      use_fedcm_for_prompt: true, 
+      callback: async (response) => {
+        try {
+          if (response.error) throw new Error('Google authentication failed');
 
-            const res = await fetch('http://localhost:3001/api/v1/auth/google', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ token: response.credential }),
-            });
+          const res = await fetch('http://localhost:3001/api/v1/auth/google', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: response.credential }),
+          });
 
-            const data = await res.json();
+          const data = await res.json();
 
-            if (!res.ok) {
-              throw new Error(data.message || 'Authentication failed');
-            }
-
-            localStorage.setItem('token', data.token);
-            setUser(data.user);
-            navigate('/');
-          } catch (err) {
-            setError(err instanceof Error ? err.message : 'Authentication failed');
-          } finally {
-            setLoading(false);
+          if (!res.ok) {
+            throw new Error(data.message || 'Authentication failed');
           }
-        },
-      });
 
-      window.google.accounts.id.prompt((notification) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          localStorage.setItem('token', data.token);
+          setUser(data.user);
+          navigate('/');
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Authentication failed');
+        } finally {
           setLoading(false);
         }
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Google authentication failed');
-      setLoading(false);
-    }
-  };
+      },
+    });
+
+    // 2. Google recomienda no depender demasiado de los callbacks de notificación 
+    // en FedCM, pero puedes mantenerlo así para el loading:
+    window.google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        setLoading(false);
+      }
+    });
+
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Google authentication failed');
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
