@@ -3,12 +3,12 @@ import { useProducts } from '../../hooks/useProducts';
 import ProductModal from '../../components/modals/ProductModal';
 
 interface Product {
-  id: Number,
-  name: String,
-  brand: String,
-  partNumber: String,
-  price: Number,
-  amount: Number
+  id: number,
+  name: string,
+  brand: string,
+  partNumber: string,
+  price: number,
+  amount: number
 }
 
 const Products = () => {
@@ -94,7 +94,7 @@ const Products = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleEdit(product)}
+                      onClick={() => handleEdit(product as any)}
                       className="text-blue-600 hover:text-blue-900 p-1"
                       title="Editar"
                     >

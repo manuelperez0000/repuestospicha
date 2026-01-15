@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import request from '../utils/request';
 import { Product } from '../utils/interfaces';
 import { apiUrl } from '../utils/utils';
@@ -18,26 +18,6 @@ export const useProducts = () => {
     setFormData, setError
   } = useProductStore();
 
-  const hasFetchedRef = useRef(false);
-
-  const fetchProducts = async () => {
-
-    if (loading || hasFetchedRef.current) return
-
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await request.get(`${apiUrl}/products`);
-      setProducts(response.data.body.products);
-      console.log("fetch products", response.data);
-      hasFetchedRef.current = true;
-    } catch (err) {
-      setError('Error al cargar los productos');
-      console.error('Error fetching products:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getProducts = async () => {
     try {
@@ -174,7 +154,6 @@ export const useProducts = () => {
 
   useEffect(() => {
     getProducts()
-    console.log("fetchin products in useEfect")
   }, []);
 
   return {
@@ -191,7 +170,6 @@ export const useProducts = () => {
     formError: formError,
 
     // Actions
-    fetchProducts,
     updateProduct,
     deleteProduct,
     handleDelete,
