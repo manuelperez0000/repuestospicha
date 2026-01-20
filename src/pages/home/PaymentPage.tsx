@@ -50,10 +50,6 @@ const PaymentPage = () => {
       alert('Por favor ingrese el número de referencia');
       return;
     }
-    if (!receiptImage) {
-      alert('Por favor cargue la captura del pago');
-      return;
-    }
 
     setIsProcessing(true);
     try {
@@ -61,7 +57,9 @@ const PaymentPage = () => {
       formData.append('buyerId', user?.id.toString() || '');
       formData.append('paymentMethod', paymentMethod === 'pago_movil' ? 'Pago Móvil' : 'Transferencia Bancaria');
       formData.append('referenceNumber', referenceNumber);
-      formData.append('receiptImage', receiptImage);
+      if (receiptImage) {
+        formData.append('receiptImage', receiptImage);
+      }
       
       const items = cart.map(item => ({
         productId: item.id,
@@ -69,7 +67,7 @@ const PaymentPage = () => {
       }));
       formData.append('items', JSON.stringify(items));
 
-      const response = await request.post(`${apiUrl}/checkout`, formData);
+      const response = await request.post(`${apiUrl}/sales/checkout`, formData);
 
       if (response.data.success) {
         clearCart();
@@ -202,7 +200,7 @@ const PaymentPage = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Comprobante de Pago (Imagen)
+                    Comprobante de Pago (Imagen - Opcional)
                   </label>
                   <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-red-400 transition-colors cursor-pointer group relative">
                     <input

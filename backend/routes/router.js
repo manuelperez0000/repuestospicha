@@ -23,7 +23,7 @@ router.use(apiVersion, categoryRoutes);
 router.use(apiVersion, subcategoryRoutes);
 router.use(apiVersion, modelRoutes);
 router.use(apiVersion, imageRoutes);
-router.use(apiVersion, saleRoutes);
+router.use(`${apiVersion}/sales`, saleRoutes);
 router.use(apiVersion, configRoutes);
 router.use(`${apiVersion}/questions`, questionRoutes);
 

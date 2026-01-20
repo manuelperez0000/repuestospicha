@@ -15,7 +15,7 @@ const Sales = () => {
   const fetchSales = async () => {
     try {
       setLoading(true);
-      const response = await request.get(`${apiUrl}/sales/sales`);
+      const response = await request.get(`${apiUrl}/sales`);
       setSales(response.data.body.sales);
     } catch (error) {
       console.error('Error fetching sales:', error);
@@ -26,7 +26,7 @@ const Sales = () => {
 
   const handleUpdateStatus = async (saleId: number, newStatus: string) => {
     try {
-      await request.put(`${apiUrl}/sales/sales/${saleId}`, { status: newStatus });
+      await request.put(`${apiUrl}/sales/${saleId}`, { status: newStatus });
       fetchSales(); // Refresh list
     } catch (error) {
       console.error('Error updating sale status:', error);

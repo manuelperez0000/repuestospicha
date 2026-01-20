@@ -5,16 +5,12 @@ import { uploadMidelware } from '../midelwares/uploadMidelware.js';
 
 const router = express.Router();
 
-router.get('/', (_req, res) => {
-  responser.success({ res, message: 'Sale API is working' });
-});
-
-router.get('/sales', getSales);
-router.get('/sales/user/:userId', getSalesByUserId);
-router.get('/sales/:id', getSale);
-router.post('/sales', createSale);
+router.get('/', getSales);
+router.get('/user/:userId', getSalesByUserId);
+router.get('/:id', getSale);
+router.post('/', createSale);
 router.post('/checkout', uploadMidelware.single('receiptImage'), createCheckout);
-router.put('/sales/:id', updateSale);
-router.delete('/sales/:id', deleteSale);
+router.put('/:id', updateSale);
+router.delete('/:id', deleteSale);
 
 export default router;

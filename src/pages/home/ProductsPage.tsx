@@ -33,6 +33,7 @@ const ProductsPage = () => {
     // Filter states
     const [selectedYear, setSelectedYear] = useState('');
     const [selectedBrand, setSelectedBrand] = useState('');
+    const [selectedModel, setSelectedModel] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubcategory, setSelectedSubcategory] = useState('');
     const [filtersExpanded, setFiltersExpanded] = useState(false);
@@ -59,12 +60,17 @@ const ProductsPage = () => {
             filtered = filtered.filter(product => product.brand === selectedBrand);
         }
 
+        if (selectedModel) {
+            filtered = filtered.filter(product => product.model === selectedModel);
+        }
+
         if (selectedCategory) {
             filtered = filtered.filter(product => product.categories.includes(selectedCategory));
         }
 
         if (selectedSubcategory) {
             filtered = filtered.filter(product =>
+                product.subcategories?.includes(selectedSubcategory) || 
                 product.name.toLowerCase().includes(selectedSubcategory.toLowerCase())
             );
         }
@@ -83,11 +89,12 @@ const ProductsPage = () => {
         }
 
         return filtered;
-    }, [products, sortBy, selectedYear, selectedBrand, selectedCategory, selectedSubcategory]);
+    }, [products, sortBy, selectedYear, selectedBrand, selectedModel, selectedCategory, selectedSubcategory]);
 
     const clearFilters = () => {
         setSelectedYear('');
         setSelectedBrand('');
+        setSelectedModel('');
         setSelectedCategory('');
         setSelectedSubcategory('');
     };
@@ -196,10 +203,12 @@ const ProductsPage = () => {
                                 <ProductFilters
                                     selectedYear={selectedYear}
                                     selectedBrand={selectedBrand}
+                                    selectedModel={selectedModel}
                                     selectedCategory={selectedCategory}
                                     selectedSubcategory={selectedSubcategory}
                                     onYearChange={setSelectedYear}
                                     onBrandChange={setSelectedBrand}
+                                    onModelChange={setSelectedModel}
                                     onCategoryChange={setSelectedCategory}
                                     onSubcategoryChange={setSelectedSubcategory}
                                     onClearFilters={clearFilters}
@@ -213,10 +222,12 @@ const ProductsPage = () => {
                                 <ProductFilters
                                     selectedYear={selectedYear}
                                     selectedBrand={selectedBrand}
+                                    selectedModel={selectedModel}
                                     selectedCategory={selectedCategory}
                                     selectedSubcategory={selectedSubcategory}
                                     onYearChange={setSelectedYear}
                                     onBrandChange={setSelectedBrand}
+                                    onModelChange={setSelectedModel}
                                     onCategoryChange={setSelectedCategory}
                                     onSubcategoryChange={setSelectedSubcategory}
                                     onClearFilters={clearFilters}

@@ -3,10 +3,12 @@ import { Search, User, ShoppingCart, Menu, X, Truck } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useStore from '../states/global';
+import { useDollarRate } from '../hooks/useDollarRate';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getCartCount, toggleCart, user } = useStore();
+  const { dollarRate } = useDollarRate();
 
   return (
     <header className="bg-gray-200 text-gray-800 top-0 left-0 right-0 z-50 shadow-md">
@@ -23,7 +25,7 @@ const Header = () => {
               srcSet="https://flagcdn.com/w80/ve.png 2x"
               width="25"
               alt="Venezuela"></img>
-            Precio del dólar BCV: 275 Bs
+            Precio del dólar BCV: {Number(dollarRate).toFixed(2)} Bs
           </span>
         </div>
       </div>
