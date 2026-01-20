@@ -4,6 +4,7 @@ import useStore from '../../states/global';
 import { apiUrl, imagesUrl } from '../../utils/utils';
 import request from '../../utils/request';
 import { Link } from 'react-router-dom';
+import FormattedPrice from '../../components/FormattedPrice';
 
 interface Sale {
   id: number;
@@ -28,7 +29,7 @@ interface Sale {
 }
 
 const Purchases = () => {
-  const { user } = useStore();
+  const { user, currency, setCurrency } = useStore();
   const [purchases, setPurchases] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -133,8 +134,32 @@ const Purchases = () => {
           <h1 className="text-3xl font-black text-gray-900 mb-1">Mis Compras</h1>
           <p className="text-gray-500 font-medium">Tienes un total de {purchases.length} pedidos realizados</p>
         </div>
-        <div className="bg-red-50 p-3 rounded-2xl">
-          <Package className="w-8 h-8 text-red-600" />
+        <div className="flex items-center gap-4">
+          <div className="flex items-center bg-gray-100 rounded-full p-0.5 shadow-sm border border-gray-200">
+            <button
+              onClick={() => setCurrency('USD')}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-200 ${
+                currency === 'USD'
+                  ? 'bg-red-500 text-white shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              USD
+            </button>
+            <button
+              onClick={() => setCurrency('BS')}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-200 ${
+                currency === 'BS'
+                  ? 'bg-red-500 text-white shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              BS
+            </button>
+          </div>
+          <div className="bg-red-50 p-3 rounded-2xl">
+            <Package className="w-8 h-8 text-red-600" />
+          </div>
         </div>
       </div>
 
@@ -200,7 +225,10 @@ const Purchases = () => {
                   <div className="pt-2 flex items-center justify-between border-t border-gray-50">
                     <div className="flex items-baseline gap-2">
                       <span className="text-gray-400 text-sm font-medium">Total pagado:</span>
-                      <span className="text-2xl font-black text-red-600">${(purchase.product.price * purchase.quantity).toFixed(2)}</span>
+                      <FormattedPrice 
+                        price={purchase.product.price * purchase.quantity} 
+                        className="text-2xl font-black text-red-600" 
+                      />
                     </div>
                     <Link to={`/producto/${purchase.productId}`}
                       className="flex items-center text-gray-400 hover:text-red-600 font-bold text-sm transition-colors"

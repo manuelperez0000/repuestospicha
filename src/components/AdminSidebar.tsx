@@ -7,7 +7,7 @@ const AdminSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { dollarRate } = useDollarRate();
-  const { logout } = useStore();
+  const { logout, currency, setCurrency } = useStore();
 
   const handleLogout = () => {
     logout();
@@ -29,10 +29,35 @@ const AdminSidebar = () => {
     <div className="w-64 bg-black shadow-lg h-screen overflow-y-auto">
       <div className="p-6 text-center border-b border-gray-800">
         <h1 className="font-bold text-gray-200 text-xl mb-2">Administrativo</h1>
-        <div className="flex items-center justify-center text-green-500 bg-green-500/10 py-2 px-3 rounded-lg border border-green-500/20">
-          <FaDollarSign className="mr-1 text-xs" />
-          <span className="text-xs font-medium uppercase mr-1">Tasa del día:</span>
-          <span className="text-sm font-bold">Bs. {dollarRate}</span>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-center text-green-500 bg-green-500/10 py-2 px-3 rounded-lg border border-green-500/20">
+            <FaDollarSign className="mr-1 text-xs" />
+            <span className="text-xs font-medium uppercase mr-1">Tasa del día:</span>
+            <span className="text-sm font-bold">Bs. {dollarRate}</span>
+          </div>
+          
+          <div className="flex items-center justify-center bg-gray-900 rounded-full p-0.5 border border-gray-700">
+            <button
+              onClick={() => setCurrency('USD')}
+              className={`flex-1 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                currency === 'USD'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              USD
+            </button>
+            <button
+              onClick={() => setCurrency('BS')}
+              className={`flex-1 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                currency === 'BS'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              BS
+            </button>
+          </div>
         </div>
       </div>
       <nav className="mt-6">

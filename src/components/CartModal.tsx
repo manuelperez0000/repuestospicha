@@ -1,6 +1,7 @@
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../states/global';
+import FormattedPrice from './FormattedPrice';
 
 const CartModal = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const CartModal = () => {
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-800">{item.name}</h3>
                     <p className="text-sm text-gray-500">{item.category}</p>
-                    <p className="text-red-500 font-semibold">${item.price.toFixed(2)}</p>
+                    <FormattedPrice price={item.price} className="text-red-500 font-semibold" />
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
@@ -82,7 +83,7 @@ const CartModal = () => {
           <div className="border-t p-6">
             <div className="flex justify-between items-center mb-4">
               <span className="text-lg font-semibold">Total:</span>
-              <span className="text-xl font-bold text-red-500">${getCartTotal().toFixed(2)}</span>
+              <FormattedPrice price={getCartTotal()} className="text-xl font-bold text-red-500" />
             </div>
             <button
               onClick={() => {

@@ -1,20 +1,22 @@
-import React from 'react';
 import { FaDollarSign, FaSave } from 'react-icons/fa';
 import { useDollarRate } from '../../hooks/useDollarRate';
+import useNotify from '../../hooks/useNotify';
 
 const DollarRateConfig = () => {
-  const { 
-    dollarRate, 
-    setDollarRate, 
-    loading: loadingDollar, 
-    error: errorDollar, 
-    saveDollarRate 
+  const {
+    dollarRate,
+    setDollarRate,
+    loading: loadingDollar,
+    error: errorDollar,
+    saveDollarRate
   } = useDollarRate();
+
+  const { notify } = useNotify()
 
   const handleSaveDollar = async () => {
     const success = await saveDollarRate(dollarRate);
     if (success) {
-      alert('Tasa del dólar guardada con éxito');
+      notify.success("Precio del dólar guardado con éxito")
     }
   };
 
@@ -26,7 +28,7 @@ const DollarRateConfig = () => {
           Tasa del Dólar
         </h2>
       </div>
-      
+
       <div className="p-4">
         <div className="flex flex-col md:flex-row items-end gap-4">
           <div className="flex-1 w-full">
@@ -53,9 +55,8 @@ const DollarRateConfig = () => {
           <button
             onClick={handleSaveDollar}
             disabled={loadingDollar}
-            className={`whitespace-nowrap flex justify-center items-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white h-[38px] ${
-              loadingDollar ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-            } transition-colors duration-200`}
+            className={`whitespace-nowrap flex justify-center items-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white h-[38px] ${loadingDollar ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+              } transition-colors duration-200`}
           >
             {loadingDollar ? (
               <span>Guardando...</span>

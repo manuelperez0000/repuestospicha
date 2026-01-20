@@ -7,7 +7,7 @@ import { useDollarRate } from '../hooks/useDollarRate';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { getCartCount, toggleCart, user } = useStore();
+  const { getCartCount, toggleCart, user, currency, setCurrency } = useStore();
   const { dollarRate } = useDollarRate();
 
   return (
@@ -19,14 +19,38 @@ const Header = () => {
             <Truck size={16} />
             Envío gratis a partir de $20
           </span>
-          <span className="flex items-center gap-2">
-            <img
-              src="https://flagcdn.com/w40/ve.png"
-              srcSet="https://flagcdn.com/w80/ve.png 2x"
-              width="25"
-              alt="Venezuela"></img>
-            Precio del dólar BCV: {Number(dollarRate).toFixed(2)} Bs
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-2">
+              <img
+                src="https://flagcdn.com/w40/ve.png"
+                srcSet="https://flagcdn.com/w80/ve.png 2x"
+                width="25"
+                alt="Venezuela"></img>
+              Precio del dólar BCV: {Number(dollarRate).toFixed(2)} Bs
+            </span>
+            <div className="flex items-center bg-white rounded-full p-0.5 shadow-sm border border-gray-200">
+              <button
+                onClick={() => setCurrency('USD')}
+                className={`px-3 py-1 rounded-full transition-all duration-200 ${
+                  currency === 'USD'
+                    ? 'bg-red-500 text-white shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                USD
+              </button>
+              <button
+                onClick={() => setCurrency('BS')}
+                className={`px-3 py-1 rounded-full transition-all duration-200 ${
+                  currency === 'BS'
+                    ? 'bg-red-500 text-white shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                BS
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

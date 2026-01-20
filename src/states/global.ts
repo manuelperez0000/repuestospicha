@@ -41,6 +41,7 @@ interface StoreState {
   cart: CartItem[];
   isCartOpen: boolean;
   user: User | null;
+  currency: 'USD' | 'BS';
   addToCart: (product: Product) => void;
   removeFromCart: (productId: number) => void;
   incrementQuantity: (productId: number) => void;
@@ -51,12 +52,14 @@ interface StoreState {
   clearCart: () => void;
   setUser: (user: User | null) => void;
   logout: () => void;
+  setCurrency: (currency: 'USD' | 'BS') => void;
 }
 
 const useStore = create<StoreState>((set, get) => ({
   cart: [],
   isCartOpen: false,
   user: getInitialUser(),
+  currency: (localStorage.getItem('currency') as 'USD' | 'BS') || 'USD',
   addToCart: (product) => set((state) => {
     const existingItem = state.cart.find(item => item.id === product.id);
     if (existingItem) {
@@ -105,6 +108,10 @@ const useStore = create<StoreState>((set, get) => ({
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     set({ user: null });
+  },
+  setCurrency: (currency) => {
+    localStorage.setItem('currency', currency);
+    set({ currency });
   },
 }))
 

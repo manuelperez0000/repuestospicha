@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Loader2, MessageSquare, Send } from 'lucide-react';
+import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Loader2, MessageSquare, Send, Plus, Minus, Trash2 } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import { imagesUrl, apiUrl } from '../../utils/utils';
 import request from '../../utils/request';
 import CartModal from '../../components/CartModal';
 import useStore from '../../states/global';
+import FormattedPrice from '../../components/FormattedPrice';
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { addToCart, cart, user } = useStore();
+  const { addToCart, cart, user, incrementQuantity, decrementQuantity, removeFromCart } = useStore();
   const { products, loading } = useProducts();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -110,7 +111,8 @@ const ProductDetailPage = () => {
   };
 
   const isInCart = cart.some(item => item.id === product.id);
-  const cartItemCount = cart.filter(item => item.id === product.id).length;
+  const cartItem = cart.find(item => item.id === product.id);
+  const cartItemCount = cartItem ? cartItem.quantity : 0;
 
   const productImages = product.images;
 
@@ -178,7 +180,7 @@ const ProductDetailPage = () => {
 
                 {/* Price */}
                 <div className="text-4xl font-bold text-red-500 mb-6">
-                  ${Number(product.price).toFixed(2)}
+                  <FormattedPrice price={product.price} />
                 </div>
               </div>
 
@@ -216,44 +218,92 @@ const ProductDetailPage = () => {
               </div>
 
               {/* Quantity and Add to Cart */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <label htmlFor="quantity" className="font-medium text-gray-700">
-                    Cantidad:
-                  </label>
-                  <select
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value))}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                      <option key={num} value={num}>{num}</option>
-                    ))}
-                  </select>
-                </div>
+              <div className="space-y-4 pt-6 border-t border-gray-100">
+                {!isInCart ? (
+                  <>
+                    <div className="flex items-center gap-4">
+                      <label htmlFor="quantity" className="font-medium text-gray-700">
+                        Cantidad:
+                      </label>
+                      <div className="flex items-center bg-white border border-gray-300 rounded-lg overflow-hidden">
+                        <button
+                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                          className="p-2 hover:bg-gray-100 transition-colors text-gray-600 border-r border-gray-300"
+                        >
+                          <Minus size={18} />
+                        </button>
+                        <span className="w-12 text-center font-bold">
+                          {quantity}
+                        </span>
+                        <button
+                          onClick={() => setQuantity(quantity + 1)}
+                          className="p-2 hover:bg-gray-100 transition-colors text-gray-600 border-l border-gray-300"
+                        >
+                          <Plus size={18} />
+                        </button>
+                      </div>
+                    </div>
 
-                <div className="flex gap-4">
-                  <button
-                    onClick={handleAddToCart}
-                    disabled={isInCart && cartItemCount >= 10}
-                    className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg transition-colors ${isInCart && cartItemCount >= 10
-                      ? 'bg-gray-400 cursor-not-allowed text-white'
-                      : 'bg-red-500 hover:bg-red-600 text-white'
-                      }`}
-                  >
-                    <ShoppingCart size={20} />
-                    {isInCart ? `Agregado (${cartItemCount})` : 'Agregar al carrito'}
-                  </button>
+                    <div className="flex gap-4">
+                      <button
+                        onClick={handleAddToCart}
+                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-200"
+                      >
+                        <ShoppingCart size={22} />
+                        Agregar al carrito
+                      </button>
 
-                  <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <Heart size={20} className="text-gray-600" />
-                  </button>
+                      <button className="p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-gray-600">
+                        <Heart size={22} />
+                      </button>
 
-                  <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <Share2 size={20} className="text-gray-600" />
-                  </button>
-                </div>
+                      <button className="p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-gray-600">
+                        <Share2 size={22} />
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-sm font-medium text-green-600 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
+                      Este producto ya está en tu carrito
+                    </p>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center bg-white border-2 border-red-100 rounded-xl overflow-hidden flex-1 h-14">
+                        <button
+                          onClick={() => decrementQuantity(product.id)}
+                          className="flex-1 h-full flex items-center justify-center hover:bg-red-50 transition-colors text-red-600 disabled:opacity-30"
+                          disabled={cartItemCount <= 1}
+                        >
+                          <Minus size={20} />
+                        </button>
+                        <span className="w-16 text-center text-xl font-bold text-gray-800">
+                          {cartItemCount}
+                        </span>
+                        <button
+                          onClick={() => incrementQuantity(product.id)}
+                          className="flex-1 h-full flex items-center justify-center hover:bg-red-50 transition-colors text-red-600"
+                        >
+                          <Plus size={20} />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => removeFromCart(product.id)}
+                        className="p-4 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors border border-red-100"
+                        title="Eliminar del carrito"
+                      >
+                        <Trash2 size={24} />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => navigate('/checkout')}
+                      className="w-full py-4 bg-gray-900 hover:bg-black text-white font-bold rounded-xl transition-all shadow-lg"
+                    >
+                      Ir a pagar
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Additional Info */}

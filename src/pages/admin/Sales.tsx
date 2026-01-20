@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Search, Loader2, ShoppingBag, User, Calendar, DollarSign, ExternalLink, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { Search, Loader2, ShoppingBag, User, Calendar, ExternalLink, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { apiUrl, imagesUrl } from '../../utils/utils';
 import request from '../../utils/request';
+import FormattedPrice from '../../components/FormattedPrice';
 
 const Sales = () => {
   const [sales, setSales] = useState<any[]>([]);
@@ -144,9 +145,10 @@ const Sales = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-red-600">
-                          ${(sale.quantity * sale.product?.price).toFixed(2)}
-                        </span>
+                        <FormattedPrice 
+                          price={sale.quantity * sale.product?.price} 
+                          className="text-sm font-bold text-red-600"
+                        />
                         <span className="text-[10px] text-gray-400 flex items-center gap-1">
                           <Calendar size={10} /> {new Date(sale.createdAt).toLocaleDateString()}
                         </span>

@@ -4,6 +4,7 @@ import { User as UserIcon, Mail, Phone, ShoppingBag, CheckCircle, AlertCircle, X
 import useStore from '../../states/global';
 import { apiUrl } from '../../utils/utils';
 import request from '../../utils/request';
+import FormattedPrice from '../../components/FormattedPrice';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -175,8 +176,11 @@ const CheckoutPage = () => {
                       <h3 className="font-bold text-gray-800 text-sm leading-tight mb-1">{item.name}</h3>
                       <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{item.category}</p>
                       <div className="flex items-center justify-between mt-2">
-                        <p className="text-xs text-gray-500">Precio unit: ${item.price.toFixed(2)}</p>
-                        <p className="text-red-600 font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500">Precio unit:</span>
+                          <FormattedPrice price={item.price} className="text-xs text-gray-600" />
+                        </div>
+                        <FormattedPrice price={item.price * item.quantity} className="text-red-600 font-bold" />
                       </div>
                     </div>
                   </div>
@@ -186,7 +190,7 @@ const CheckoutPage = () => {
               <div className="bg-gray-50 p-6 rounded-2xl space-y-3">
                 <div className="flex justify-between items-center text-gray-600">
                   <span>Subtotal</span>
-                  <span className="font-medium">${getCartTotal().toFixed(2)}</span>
+                  <FormattedPrice price={getCartTotal()} className="font-medium text-gray-800" />
                 </div>
                 <div className="flex justify-between items-center text-gray-600 pb-3 border-b border-gray-200">
                   <span>Envío</span>
@@ -194,7 +198,7 @@ const CheckoutPage = () => {
                 </div>
                 <div className="flex justify-between items-center text-xl font-black pt-2">
                   <span className="text-gray-800">Total</span>
-                  <span className="text-red-600">${getCartTotal().toFixed(2)}</span>
+                  <FormattedPrice price={getCartTotal()} className="text-red-600" />
                 </div>
               </div>
 

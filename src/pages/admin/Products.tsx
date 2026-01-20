@@ -1,6 +1,7 @@
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import { useProducts } from '../../hooks/useProducts';
 import ProductModal from '../../components/modals/ProductModal';
+import FormattedPrice from '../../components/FormattedPrice';
 
 interface Product {
   id: number,
@@ -86,7 +87,7 @@ const Products = () => {
                   {product.partNumber}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  ${String(product.price)}
+                  <FormattedPrice price={product.price} />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {String(product.amount)}

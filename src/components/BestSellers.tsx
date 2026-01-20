@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { List, Grid2X2, Grid3X3, Star, Loader2 } from 'lucide-react';
+import { List, Grid2X2, Grid3X3, Star, Loader2, Plus, Minus, Trash2 } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { imagesUrl } from '../utils/utils';
 import ProductCard from './ProductCard';
 import useStore from '../states/global';
+import FormattedPrice from './FormattedPrice';
 
 const BestSellers = () => {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ const BestSellers = () => {
     }
   };
 
-  const { addToCart, cart } = useStore();
+  const { addToCart, cart, incrementQuantity, decrementQuantity, removeFromCart } = useStore();
 
   const handleAddToCart = (product: any) => {
     if (!cart.some(item => item.id === product.id)) {
@@ -75,49 +76,84 @@ const BestSellers = () => {
     }
   };
 
-  const isInCart = (productId: number) => {
-    return cart.some(item => item.id === productId);
+  const getCartItem = (productId: number) => {
+    return cart.find(item => item.id === productId);
   };
 
-  const renderListItem = (product: any) => (
-    <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-md flex">
-      <div className="relative cursor-pointer w-48 h-48" onClick={() => navigate(`/producto/${product.id}`)}>
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full  h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
-      </div>
-      <div className="flex-1 p-6 relative">
-        <p className="text-gray-500 text-sm mb-1">{product.category}</p>
-        <h3 onClick={() => navigate(`/producto/${product.id}`)} className="hover:underline cursor-pointer font-semibold text-lg mb-2 text-gray-800">{product.name}</h3>
-        <div className="flex items-center mb-3">
-          <div className="flex text-yellow-400 mr-2">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={16} fill={i < product.rating ? 'currentColor' : 'none'} />
-            ))}
-          </div>
-          <span className="text-gray-500 text-sm">{product.reviews} {product.reviews === 1 ? 'reseña' : 'reseñas'}</span>
+  const renderListItem = (product: any) => {
+    const cartItem = getCartItem(product.id);
+    const isInCart = !!cartItem;
+
+    return (
+      <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-md flex">
+        <div className="relative cursor-pointer w-48 h-48" onClick={() => navigate(`/producto/${product.id}`)}>
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full  h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
         </div>
+        <div className="flex-1 p-6 relative">
+          <p className="text-gray-500 text-sm mb-1">{product.category}</p>
+          <h3 onClick={() => navigate(`/producto/${product.id}`)} className="hover:underline cursor-pointer font-semibold text-lg mb-2 text-gray-800">{product.name}</h3>
+          <div className="flex items-center mb-3">
+            <div className="flex text-yellow-400 mr-2">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={16} fill={i < product.rating ? 'currentColor' : 'none'} />
+              ))}
+            </div>
+            <span className="text-gray-500 text-sm">{product.reviews} {product.reviews === 1 ? 'reseña' : 'reseñas'}</span>
+          </div>
 
-        {/* Price in top-right corner */}
-        <p className="absolute top-6 right-6 text-red-500 font-bold text-xl">${Number(product.price).toFixed(2)}</p>
+          {/* Price in top-right corner */}
+          <div className="absolute top-6 right-6">
+            <FormattedPrice price={product.price} className="text-red-500 font-bold text-xl" />
+          </div>
 
-        {/* Add to cart button in bottom-right corner */}
-        <button
-          onClick={() => handleAddToCart(product)}
-          disabled={isInCart(product.id)}
-          className={`absolute bottom-6 right-6 px-4 py-2 rounded transition-colors ${isInCart(product.id)
-              ? 'bg-red-700 cursor-not-allowed opacity-75 text-white'
-              : 'bg-red-600 hover:bg-red-700 cursor-pointer text-white'
-            }`}
-        >
-          {isInCart(product.id) ? 'Agregado' : 'Agregar al carrito'}
-        </button>
+          {/* Actions in bottom-right corner */}
+          <div className="absolute bottom-6 right-6">
+            {isInCart ? (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={() => decrementQuantity(product.id)}
+                    className="p-1 hover:bg-white rounded-md transition-colors text-gray-600 disabled:opacity-50"
+                    disabled={cartItem.quantity <= 1}
+                  >
+                    <Minus size={18} />
+                  </button>
+                  <span className="px-3 font-bold text-sm">
+                    {cartItem.quantity}
+                  </span>
+                  <button
+                    onClick={() => incrementQuantity(product.id)}
+                    className="p-1 hover:bg-white rounded-md transition-colors text-gray-600"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+                <button
+                  onClick={() => removeFromCart(product.id)}
+                  className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                  title="Eliminar del carrito"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => handleAddToCart(product)}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded transition-colors cursor-pointer"
+              >
+                Agregar al carrito
+              </button>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (loading) {
     return (

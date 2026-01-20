@@ -4,6 +4,7 @@ import { CreditCard, Smartphone, Hash, Image as ImageIcon, CheckCircle, AlertCir
 import useStore from '../../states/global';
 import { apiUrl } from '../../utils/utils';
 import request from '../../utils/request';
+import FormattedPrice from '../../components/FormattedPrice';
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -72,7 +73,7 @@ const PaymentPage = () => {
       if (response.data.success) {
         clearCart();
         alert('¡Compra realizada con éxito! Su pedido está siendo procesado.');
-        navigate('/');
+        navigate('/clients/purchases');
       } else {
         alert('Hubo un error al procesar su compra: ' + (response.data.message || 'Error desconocido'));
       }
@@ -230,7 +231,7 @@ const PaymentPage = () => {
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-gray-600 font-medium">Total a pagar:</span>
-                <span className="text-2xl font-bold text-red-600">${getCartTotal().toFixed(2)}</span>
+                <FormattedPrice price={getCartTotal()} className="text-2xl font-bold text-red-600" />
               </div>
               
               <button
