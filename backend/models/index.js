@@ -12,6 +12,7 @@ import defineQuestion from './Question.js';
 import defineVisit from './Visit.js';
 import definePaymentMethod from './paymentmethod.js';
 import defineSlider from './Slider.js';
+import defineAdvertising from './Advertising.js';
 
 import 'dotenv/config';
 
@@ -49,6 +50,7 @@ const models = {
     Visit: defineVisit(sequelize),
     PaymentMethod: definePaymentMethod(sequelize),
     Slider: defineSlider(sequelize),
+    Advertising: defineAdvertising(sequelize),
   };
 
 // Define associations
@@ -151,6 +153,7 @@ export const {
   Visit,
   PaymentMethod,
   Slider,
+  Advertising,
 } = models;
 
 export default {

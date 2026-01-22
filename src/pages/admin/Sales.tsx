@@ -13,7 +13,10 @@ const Sales = () => {
   // New Filter States
   const [statusFilter, setStatusFilter] = useState('');
   const [paymentMethodFilter, setPaymentMethodFilter] = useState('');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [dateRange, setDateRange] = useState({ 
+    start: new Date(Date.now() - 86400000).toISOString().split('T')[0], 
+    end: new Date().toISOString().split('T')[0] 
+  });
   const [showFilters, setShowFilters] = useState(false);
 
   const { notify } = useNotify()
@@ -41,9 +44,11 @@ const Sales = () => {
   };
 
   const clearFilters = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
     setStatusFilter('');
     setPaymentMethodFilter('');
-    setDateRange({ start: '', end: '' });
+    setDateRange({ start: yesterday, end: today });
     setSearchTerm('');
   };
 

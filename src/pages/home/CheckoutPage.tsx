@@ -168,17 +168,21 @@ const CheckoutPage = () => {
                         alt={item.name}
                         className="w-20 h-20 object-cover rounded-xl shadow-sm group-hover:scale-105 transition-transform"
                       />
-                      <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full shadow-md">
+                      {/* <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full shadow-md">
                         {item.quantity}
-                      </span>
+                      </span> */}
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold text-gray-800 text-sm leading-tight mb-1">{item.name}</h3>
                       <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{item.category}</p>
                       <div className="flex items-center justify-between mt-2">
-                        <div className="flex flex-col">
-                          <span className="text-xs text-gray-500">Precio unit:</span>
+                        <div className="">
+                          <span className="text-xs text-gray-500">Precio unit: </span>
                           <FormattedPrice price={item.price} className="text-xs text-gray-600" />
+                        </div>
+                        <div className="text-gray-500">
+                          <span className="text-xs ">Cantidad: </span>
+                          {item.quantity}
                         </div>
                         <FormattedPrice price={item.price * item.quantity} className="text-red-600 font-bold" />
                       </div>

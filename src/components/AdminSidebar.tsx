@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaUsers, FaBox, FaChartLine, FaCog, FaDollarSign, FaSignOutAlt, FaQuestionCircle, FaCreditCard, FaSlidersH } from 'react-icons/fa';
+import { FaUsers, FaBox, FaChartLine, FaCog, FaDollarSign, FaSignOutAlt, FaQuestionCircle, FaCreditCard, FaSlidersH, FaAd } from 'react-icons/fa';
 import { useDollarRate } from '../hooks/useDollarRate';
 import useStore from '../states/global';
 
@@ -18,6 +18,7 @@ const AdminSidebar = () => {
     { path: '/admin/dashboard', icon: <FaChartLine />, label: 'Dashboard' },
     { path: '/admin/users', icon: <FaUsers />, label: 'Usuarios' },
     { path: '/admin/sliders', icon: <FaSlidersH />, label: 'Sliders' },
+    { path: '/admin/advertising', icon: <FaAd />, label: 'Publicidad' },
     { path: '/admin/products', icon: <FaBox />, label: 'Productos' },
     { path: '/admin/sales', icon: <FaChartLine />, label: 'Ventas' },
     { path: '/admin/client-questions', icon: <FaQuestionCircle />, label: 'Preguntas' },

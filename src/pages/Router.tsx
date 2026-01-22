@@ -28,6 +28,7 @@ import Configurations from "./admin/Configurations"
 import ClientQuestions from "./admin/ClientQuestions"
 import PaymentMethods from "./admin/PaymentMethods"
 import Sliders from "./admin/Sliders"
+import Advertising from "./admin/Advertising"
 import Test from './test'
 
 const Router = () => {
@@ -57,6 +58,7 @@ const Router = () => {
             <Route element={<AdminLayout />}>
                 <Route path="/admin" element={<Dashboard />} />
                 <Route path="/admin/sliders" element={<Sliders />} />
+                <Route path="/admin/advertising" element={<Advertising />} />
                 <Route path="/admin/dashboard" element={<Dashboard />} />
                 <Route path="/admin/users" element={<Users />} />
                 <Route path="/admin/products" element={<Products />} />

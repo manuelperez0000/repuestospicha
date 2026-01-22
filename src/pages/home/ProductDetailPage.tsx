@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Loader2, MessageSquare, Send, Plus, Minus, Trash2 } from 'lucide-react';
+import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Loader2, MessageSquare, Send, Plus, Minus, Trash2, Search } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import { imagesUrl, apiUrl } from '../../utils/utils';
 import request from '../../utils/request';
 import CartModal from '../../components/CartModal';
+import ImageGallery from '../../components/ImageGallery';
 import useStore from '../../states/global';
 import FormattedPrice from '../../components/FormattedPrice';
 import useNotify from '../../hooks/useNotify';
+
 const ProductDetailPage = () => {
   const { notify } = useNotify()
   const { id } = useParams<{ id: string }>();
@@ -16,6 +18,7 @@ const ProductDetailPage = () => {
   const { products, loading } = useProducts();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   // Question states
   const [questions, setQuestions] = useState<any[]>([]);
@@ -118,10 +121,17 @@ const ProductDetailPage = () => {
   const productImages = product.images;
 
   return (
-    <>
-      <CartModal />
+        <>
+            <CartModal />
+            
+            <ImageGallery
+                images={productImages}
+                initialIndex={selectedImage}
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+            />
 
-      <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Back Button */}
           <button
@@ -135,12 +145,20 @@ const ProductDetailPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Product Images */}
             <div className="space-y-4">
-              <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-md">
+              <div
+                className="aspect-square bg-white rounded-lg overflow-hidden shadow-md cursor-zoom-in relative group"
+                onClick={() => setIsGalleryOpen(true)}
+              >
                 <img
                   src={productImages[selectedImage]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <div className="p-3 bg-white/90 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100">
+                    <Search className="w-6 h-6 text-red-600" />
+                  </div>
+                </div>
               </div>
 
               {/* Thumbnail Images */}
@@ -201,11 +219,11 @@ const ProductDetailPage = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="font-medium text-gray-700">Categoría:</span>
-                    <p className="text-gray-600">{product.category || 'N/A'}</p>
+                    <p className="text-gray-600">{product.category || 'N/A'}, {product.subcategories || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="font-medium text-gray-700">Marca:</span>
-                    <p className="text-gray-600">{product.brand || 'N/A'}</p>
+                    <p className="text-gray-600">{product.brand || 'N/A'}, {product.model || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="font-medium text-gray-700">Calificación:</span>
@@ -329,8 +347,9 @@ const ProductDetailPage = () => {
           <div className="mt-16 bg-white rounded-xl shadow-sm p-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-8 flex items-center gap-3">
               <MessageSquare className="text-red-500" />
-              Preguntas y Respuestas
+              Realizar una pregunta sobre este articulo
             </h2>
+            <p className='text-sm text-gray-500 mb-3'>Las preguntas realizadas las veras en la seccion de preguntas en tu perfil de usuario</p>
 
             {/* Question Input */}
             <form onSubmit={handleQuestionSubmit} className="mb-10">
@@ -368,7 +387,7 @@ const ProductDetailPage = () => {
             </form>
 
             {/* Questions List */}
-            <div className="space-y-8">
+            {/* <div className="space-y-8">
               {loadingQuestions ? (
                 <div className="flex justify-center py-8">
                   <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
@@ -413,7 +432,7 @@ const ProductDetailPage = () => {
                   <p className="text-gray-500 font-medium">Aún no hay preguntas. ¡Sé el primero en preguntar!</p>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
 
           {/* Related Products Section */}

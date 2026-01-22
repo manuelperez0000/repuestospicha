@@ -1,4 +1,3 @@
--> ajustar el footer con los links reales, crear paginas de esos link por ejemplo:
  como ordenar? , 
 informacion de envio y trakin, 
 devoluciones, 
@@ -23,5 +22,5 @@ terminos de servicio
 
 -> ajustar el modulo de configuracion del adminsitrador apegado al documento de requerimientos (pdf con la descripcion de la aplicacion)
 
-los sliders se editan
+
 si hay un producto vinculado no se puede eliminar
