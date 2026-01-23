@@ -9,7 +9,9 @@ class ModelService {
         include: [{
           model: Brand,
           as: 'brand',
-          attributes: ['brand']
+          attributes: ['brand'],
+          where: { softDelete: 0 },
+          required: false
         }],
         order: [['createdAt', 'DESC']]
       });
@@ -25,7 +27,9 @@ class ModelService {
         include: [{
           model: Brand,
           as: 'brand',
-          attributes: ['brand']
+          attributes: ['brand'],
+          where: { softDelete: 0 },
+          required: false
         }]
       });
       if (!model) {
@@ -44,7 +48,9 @@ class ModelService {
         include: [{
           model: Brand,
           as: 'brand',
-          attributes: ['brand']
+          attributes: ['brand'],
+          where: { softDelete: 0 },
+          required: false
         }]
       });
       return createdModel;
@@ -66,7 +72,9 @@ class ModelService {
         include: [{
           model: Brand,
           as: 'brand',
-          attributes: ['brand']
+          attributes: ['brand'],
+          where: { softDelete: 0 },
+          required: false
         }]
       });
       return updatedModel;

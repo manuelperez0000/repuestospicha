@@ -6,6 +6,7 @@ class BrandService {
   async getAllBrands() {
     try {
       const brands = await Brand.findAll({
+        where: { softDelete: 0 },
         order: [['brand', 'ASC']]
       });
       return brands;
@@ -16,7 +17,9 @@ class BrandService {
 
   async getBrandById(id) {
     try {
-      const brand = await Brand.findByPk(id);
+      const brand = await Brand.findOne({
+        where: { id, softDelete: 0 }
+      });
       if (!brand) {
         throw new Error('Brand not found');
       }
@@ -37,7 +40,9 @@ class BrandService {
 
   async updateBrand(id, updateData) {
     try {
-      const brand = await Brand.findByPk(id);
+      const brand = await Brand.findOne({
+        where: { id, softDelete: 0 }
+      });
       if (!brand) {
         throw new Error('Brand not found');
       }
@@ -56,7 +61,7 @@ class BrandService {
         throw new Error('Brand not found');
       }
 
-      await brand.destroy();
+      await brand.update({ softDelete: 1 });
       return { message: 'Brand deleted successfully' };
     } catch (error) {
       throw new Error(`Failed to delete brand: ${error.message}`);

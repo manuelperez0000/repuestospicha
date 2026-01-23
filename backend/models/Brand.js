@@ -11,6 +11,11 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    softDelete: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
